@@ -2,19 +2,19 @@
 require "connect.php";
 
 $flag['success'] = 0;
-$phone = mysqli_real_escape_string($con, $_GET['phone']);
+$email = mysqli_real_escape_string($con, $_GET['email']);
 $password = $_GET['password'];
 $encrypted_password = md5($password);
 
 $flag['userdata'] = array();
 
 // I am using a prepared statement to avoid SQL injection
-$query = "SELECT * FROM users WHERE user_phone = ? AND user_password = ? LIMIT 1";
+$query = "SELECT * FROM users WHERE email = ? AND password = ? LIMIT 1";
 $stmt = mysqli_prepare($con, $query);
 
 if ($stmt) {
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "ss", $phone, $encrypted_password);
+    mysqli_stmt_bind_param($stmt, "ss", $email, $encrypted_password);
 
     // Execute the query
     mysqli_stmt_execute($stmt);
