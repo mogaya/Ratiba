@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ratiba_app/configs/constants.dart';
+import 'package:ratiba_app/views/components/customButton.dart';
 
 class Landing extends StatefulWidget {
   const Landing({super.key});
@@ -46,14 +48,11 @@ class _LandingState extends State<Landing> with SingleTickerProviderStateMixin {
                 Center(
                   child: Lottie.network(
                     'https://lottie.host/4810f37f-e3c5-4139-80c7-3e29612bcce0/PyqgYL7rZO.json',
-                    // controller: _controller,
-                    // onLoaded: (composition) {
-                    //   // Configure the AnimationController with the duration of the Lottie animation
-                    //   _controller.duration = composition.duration;
-                    //   setState(() {
-                    //     _isLoading = false;
-                    //   });
-                    // },
+                    onLoaded: (composition) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    },
                   ),
                 ),
                 Text(
@@ -63,57 +62,44 @@ class _LandingState extends State<Landing> with SingleTickerProviderStateMixin {
                     fontWeight: FontWeight.bold,
                     color: Colors.blue[900],
                   ),
-                )
+                ),
+                if (_isLoading)
+                  (Center(
+                    child: CircularProgressIndicator(
+                      color: ascentColor,
+                      strokeWidth: 5,
+                    ),
+                  ))
               ],
             ),
             const SizedBox(
               height: 40,
             ),
             SizedBox(
-              width: 300,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: baseColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      side: BorderSide(color: ascentColor, width: 2)),
-                ),
-                onPressed: () {},
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ),
+              width: 350,
+              child: customButton(
+                text: "SIGN IN",
+                onPressed: () {
+                  Get.toNamed('/sign_in');
+                },
+                txtFontWeight: FontWeight.w600,
+                txtFontSize: 18,
+                color: secondaryColor,
               ),
             ),
             const SizedBox(
               height: 20,
             ),
             SizedBox(
-              width: 300,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: baseColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      side: BorderSide(color: ascentColor, width: 2)),
-                ),
-                onPressed: () {},
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Create Account',
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ),
+              width: 350,
+              child: customButton(
+                text: "CREATE ACCOUNT",
+                onPressed: () {
+                  Get.toNamed('/sign_up');
+                },
+                txtFontWeight: FontWeight.w600,
+                txtFontSize: 18,
+                color: secondaryColor,
               ),
             ),
           ],

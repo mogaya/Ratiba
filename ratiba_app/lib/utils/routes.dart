@@ -9,7 +9,7 @@ class Routes {
   static var routes = [
     GetPage(name: '/', page: () => const Landing()),
     GetPage(name: '/sign_in', page: () => const SignIn()),
-    GetPage(name: '/sign_up', page: () => const SignUp()),
+    GetPage(name: '/sign_up', page: () => SignUp()),
     GetPage(name: '/home', page: () => const Home()),
     GetPage(name: '/add_task', page: () => const AddTask()),
   ];
