@@ -7,7 +7,7 @@ import 'package:ratiba_app/controllers/sign_in_controller.dart';
 import 'package:ratiba_app/views/components/customButton.dart';
 import 'package:ratiba_app/views/components/customTextFormField.dart';
 
-TextEditingController phone = TextEditingController();
+TextEditingController email = TextEditingController();
 TextEditingController password = TextEditingController();
 SignInController signInController = Get.put(SignInController());
 
@@ -46,7 +46,7 @@ class SignIn extends StatelessWidget {
                   ),
 
                   const Text(
-                    "Fill in your Phone and Password to login to your account.",
+                    "Fill in your Email and Password to login to your account.",
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -57,11 +57,11 @@ class SignIn extends StatelessWidget {
                     height: 20,
                   ),
 
-                  // Phone input area
+                  // Email input area
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Phone",
+                      "Email",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -71,15 +71,23 @@ class SignIn extends StatelessWidget {
                   ),
 
                   CustomTextFormField(
-                    hintMessage: "Enter your Phone",
-                    controller: phone,
-                    keyboardType: TextInputType.phone,
+                    hintMessage: "Enter your Email",
+                    controller: email,
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Phone number is required';
-                      } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
-                        return 'Please enter a valid 10-digit phone number';
+                        return 'Email is required';
                       }
+
+                      // Regular expression for validating an email address
+                      String pattern =
+                          r'^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*(\.[a-zA-Z]{2,})+$';
+                      RegExp regex = RegExp(pattern);
+
+                      if (!regex.hasMatch(value)) {
+                        return 'Enter a valid email address';
+                      }
+
                       return null;
                     },
                   ),
@@ -151,7 +159,7 @@ class SignIn extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       GestureDetector(
-                        onTap: () => Get.toNamed("/signup"),
+                        onTap: () => Get.toNamed("/sign_up"),
                         child: const Row(
                           children: [
                             Text(
@@ -190,12 +198,8 @@ class SignIn extends StatelessWidget {
     http.Response response;
     response = await http.get(
       Uri.parse(
-          "https://mmogaya.com/ratiba/sign_in.php?email=testuser@gmail.com&password=test123"),
+          "https://mmogaya.com/ratiba/sign_in.php?email=${email.text.trim()}&password=${password.text.trim()}"),
     );
-    // response = await http.get(
-    //   Uri.parse(
-    //       "https://mmogaya.com/tectally/login.php?phone=${phone.text.trim()}&password=${password.text.trim()}"),
-    // );
 
     if (response.statusCode == 200) {
       var serverResponse = json.decode(response.body);
@@ -223,16 +227,15 @@ class SignIn extends StatelessWidget {
 
       if (loginStatus == 1) {
         var userData = serverResponse['userdata'];
-        profileController.updateUserPhone(userData['user_phone']);
-        profileController.updateUserId(userData['user_id']);
-        profileController.updateUserName(userData['user_name']);
-        profileController.updateUserEmail(userData['user_email']);
-        profileController.updateUserOrganization(userData['user_organization']);
+        signInController.updateUserId(userData['id']);
+        signInController.updateUserName(userData['username']);
+        signInController.updateUserEmail(userData['email']);
+        signInController.updateUserPhone(userData['phone']);
 
-        phone.clear();
+        email.clear();
         password.clear();
 
-        Get.toNamed("/navigator");
+        Get.toNamed("/home");
       } else {
         // Show alert if login fails
         showDialog(
